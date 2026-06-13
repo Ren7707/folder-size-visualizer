@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AB1AE4C4-6D53-4470-9EAC-69D57C240AB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FolderSizeVisualizer.Core", "src\FolderSizeVisualizer.Core\FolderSizeVisualizer.Core.csproj", "{68B84C45-91D0-47B1-8CFD-59F0CE3592B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FC667C20-51A7-47B1-A494-8A64CFAC8277}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FolderSizeVisualizer.Core.Tests", "tests\FolderSizeVisualizer.Core.Tests\FolderSizeVisualizer.Core.Tests.csproj", "{9305B32E-D727-434D-987D-D85AACD987AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FolderSizeVisualizer.App", "src\FolderSizeVisualizer.App\FolderSizeVisualizer.App.csproj", "{EA7C95AE-C390-45CB-834D-CA886EB770E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68B84C45-91D0-47B1-8CFD-59F0CE3592B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68B84C45-91D0-47B1-8CFD-59F0CE3592B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68B84C45-91D0-47B1-8CFD-59F0CE3592B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68B84C45-91D0-47B1-8CFD-59F0CE3592B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9305B32E-D727-434D-987D-D85AACD987AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9305B32E-D727-434D-987D-D85AACD987AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9305B32E-D727-434D-987D-D85AACD987AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9305B32E-D727-434D-987D-D85AACD987AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA7C95AE-C390-45CB-834D-CA886EB770E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA7C95AE-C390-45CB-834D-CA886EB770E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA7C95AE-C390-45CB-834D-CA886EB770E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA7C95AE-C390-45CB-834D-CA886EB770E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{68B84C45-91D0-47B1-8CFD-59F0CE3592B6} = {AB1AE4C4-6D53-4470-9EAC-69D57C240AB8}
+		{9305B32E-D727-434D-987D-D85AACD987AA} = {FC667C20-51A7-47B1-A494-8A64CFAC8277}
+		{EA7C95AE-C390-45CB-834D-CA886EB770E8} = {AB1AE4C4-6D53-4470-9EAC-69D57C240AB8}
+	EndGlobalSection
+EndGlobal

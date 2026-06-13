@@ -1,0 +1,247 @@
+<Window x:Class="FolderSizeVisualizer.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:FolderSizeVisualizer.App.Controls"
+        xmlns:converters="clr-namespace:FolderSizeVisualizer.App.Converters"
+        Title="Folder Size Visualizer" Width="1280" Height="800" MinWidth="980" MinHeight="640"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <converters:PathToImageBrushConverter x:Key="PathToImageBrushConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <DropShadowEffect x:Key="CardShadow" BlurRadius="26" ShadowDepth="8" Opacity="0.12" Color="#8B97AA"/>
+        <LinearGradientBrush x:Key="HeroGradientBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FF4CB7" Offset="0"/>
+            <GradientStop Color="#C23DFF" Offset="0.55"/>
+            <GradientStop Color="#7DDCF2" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="HelpGradientBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FF6BC8" Offset="0"/>
+            <GradientStop Color="#B135F2" Offset="1"/>
+        </LinearGradientBrush>
+        <Style TargetType="Button">
+            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="{DynamicResource AppBackgroundBrush}">
+        <Border Margin="36" CornerRadius="24" Background="{DynamicResource ShellBackgroundBrush}"
+                BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1"
+                Effect="{StaticResource CardShadow}" ClipToBounds="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="214"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="0,0,1,0"
+                        Background="{DynamicResource PanelBackgroundBrush}">
+                    <Grid Margin="24">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="26" Height="26" CornerRadius="7" Background="{StaticResource HeroGradientBrush}"/>
+                            <TextBlock Text="{DynamicResource AppName}" Margin="10,2,0,0" FontSize="17" FontWeight="Bold"
+                                       Foreground="{DynamicResource PrimaryTextBrush}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Margin="0,54,0,0">
+                            <TextBlock Text="{DynamicResource MenuLabel}" FontSize="11" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,18"/>
+                            <Button Content="{DynamicResource HomeLabel}" Command="{Binding FocusTreemapCommand}"
+                                    HorizontalContentAlignment="Left" Background="Transparent" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,14"/>
+                            <Button Content="{DynamicResource TreemapLabel}" Command="{Binding FocusTreemapCommand}"
+                                    HorizontalContentAlignment="Left" Background="{DynamicResource SoftPanelBrush}" Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,14"/>
+                            <Button Content="{DynamicResource SortLabel}" Command="{Binding FocusTreemapCommand}"
+                                    HorizontalContentAlignment="Left" Background="Transparent" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,14"/>
+                        </StackPanel>
+
+                        <Border Grid.Row="2" CornerRadius="18" Padding="18" Background="{StaticResource HelpGradientBrush}">
+                            <StackPanel>
+                                <Border Width="38" Height="38" CornerRadius="19" Background="#F4FFFFFF" HorizontalAlignment="Center" Margin="0,-6,0,10">
+                                    <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#D63CE3" FontWeight="Bold"/>
+                                </Border>
+                                <TextBlock Text="{DynamicResource SpaceControlLabel}" Foreground="White" FontWeight="Bold" TextAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource HelpText}" Foreground="#EFFFFFFF" FontSize="11"
+                                           TextWrapping="Wrap" TextAlignment="Center" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Column="1" Margin="48,30,48,32">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="88"/>
+                        <RowDefinition Height="220"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="54"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource WelcomeTitle}" FontSize="24" FontWeight="Bold"
+                                       Foreground="{DynamicResource AccentBrush}"/>
+                            <TextBlock Text="{DynamicResource WelcomeSubtitle}"
+                                       FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,6,0,0"/>
+                        </StackPanel>
+
+                        <Grid Grid.Column="1">
+                            <Button x:Name="SettingsButton" Content="⚙" Width="42" Height="42"
+                                    Background="{DynamicResource SoftPanelBrush}" Foreground="{DynamicResource PrimaryTextBrush}"
+                                    Command="{Binding ToggleSettingsCommand}"/>
+                            <Popup PlacementTarget="{Binding ElementName=SettingsButton}" Placement="Bottom"
+                                   IsOpen="{Binding IsSettingsOpen}" StaysOpen="False" AllowsTransparency="True">
+                                <Border Width="286" Margin="0,10,0,0" CornerRadius="20" Background="{DynamicResource PanelBackgroundBrush}"
+                                        Padding="20" Effect="{StaticResource CardShadow}">
+                                    <StackPanel>
+                                        <TextBlock Text="{DynamicResource SettingsLabel}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        <TextBlock Text="{DynamicResource LanguageLabel}" Margin="0,14,0,4" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                        <ComboBox ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}"/>
+                                        <TextBlock Text="{DynamicResource ThemeLabel}" Margin="0,12,0,4" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                        <ComboBox ItemsSource="{Binding Themes}" SelectedItem="{Binding SelectedTheme}"/>
+                                        <TextBlock Text="{DynamicResource DeleteModeLabel}" Margin="0,12,0,4" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                        <ComboBox ItemsSource="{Binding DeleteModes}" SelectedItem="{Binding SelectedDeleteMode}"/>
+                                        <TextBlock Text="{DynamicResource TreemapOpacityLabel}" Margin="0,12,0,4" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                        <Slider Minimum="0.4" Maximum="1" Value="{Binding VisualizationOpacity}"/>
+                                        <TextBlock Text="{DynamicResource BackgroundBlurLabel}" Margin="0,12,0,4" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                        <Slider Minimum="0" Maximum="30" Value="{Binding BackgroundBlur}"/>
+                                        <Button Content="{DynamicResource ChooseBackgroundLabel}" Command="{Binding ChooseBackgroundCommand}" Margin="0,16,0,0"
+                                                Background="{StaticResource HeroGradientBrush}" Foreground="White"/>
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.05*"/>
+                            <ColumnDefinition Width="1.1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border CornerRadius="18" Background="{StaticResource HeroGradientBrush}" Padding="22" Effect="{StaticResource CardShadow}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="{DynamicResource CurrentFolderLabel}" Foreground="#EFFFFFFF" FontSize="12"/>
+                                <StackPanel Grid.Row="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding TotalSizeText}" Foreground="White" FontSize="34" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding FolderPath}" Foreground="#EFFFFFFF" TextTrimming="CharacterEllipsis" Margin="0,8,0,0"/>
+                                </StackPanel>
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding FolderCount, StringFormat={}{0} folders}" Foreground="White" FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding FileCount, StringFormat={}{0} files}" Foreground="White" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Grid.Column="1" Margin="26,0,0,0" CornerRadius="18" Padding="22"
+                                Background="{DynamicResource PanelBackgroundBrush}" Effect="{StaticResource CardShadow}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="{DynamicResource AnalyzeFolderLabel}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                <Border Grid.Row="1" Margin="0,18,0,12" CornerRadius="19" Background="{DynamicResource SoftPanelBrush}"
+                                        BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" Padding="8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="32"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="92"/>
+                                            <ColumnDefinition Width="84"/>
+                                            <ColumnDefinition Width="96"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="🔎" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding FolderPath, UpdateSourceTrigger=PropertyChanged}"
+                                                 MinHeight="34" VerticalContentAlignment="Center" BorderThickness="0"
+                                                 Background="Transparent" ToolTip="{DynamicResource PathPlaceholderLabel}"/>
+                                        <Button Grid.Column="2" Content="{DynamicResource CopyPathLabel}" Command="{Binding CopyPathCommand}"
+                                                Margin="8,0,0,0" Background="White" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        <Button Grid.Column="3" Content="{DynamicResource BrowseLabel}" Command="{Binding BrowseCommand}"
+                                                Margin="8,0,0,0" Background="White" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        <Button Grid.Column="4" Content="{DynamicResource AnalyzeLabel}" Command="{Binding AnalyzeCommand}"
+                                                Margin="8,0,0,0" Background="{StaticResource HeroGradientBrush}" Foreground="White"/>
+                                    </Grid>
+                                </Border>
+                                <Grid Grid.Row="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <DockPanel>
+                                        <TextBlock Text="{Binding StatusText}" Foreground="{DynamicResource SecondaryTextBrush}" DockPanel.Dock="Left"/>
+                                        <ComboBox Width="138" ItemsSource="{Binding SortModes}" SelectedItem="{Binding SelectedSortMode}"/>
+                                    </DockPanel>
+                                    <ProgressBar Grid.Row="1" Height="8" Minimum="0" Maximum="100" Value="{Binding Progress}"
+                                                 VerticalAlignment="Bottom"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <Grid Grid.Row="2" Margin="0,26,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="330"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border CornerRadius="20" Background="{DynamicResource PanelBackgroundBrush}" Padding="18"
+                                Effect="{StaticResource CardShadow}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="{DynamicResource FolderGeometryLabel}" FontSize="20" FontWeight="Bold"
+                                           Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,14"/>
+                                <controls:TreemapView Grid.Row="1" ItemsSource="{Binding VisibleNodes}"
+                                                      ExpandCommand="{Binding ExpandCommand}"
+                                                      BackCommand="{Binding BackCommand}"
+                                                      OpenLocationCommand="{Binding OpenLocationCommand}"
+                                                      DeleteCommand="{Binding DeleteCommand}"
+                                                      Opacity="{Binding VisualizationOpacity}"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Grid.Column="1" Margin="26,0,0,0" CornerRadius="20" Background="{DynamicResource PanelBackgroundBrush}" Padding="20"
+                                Effect="{StaticResource CardShadow}">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource ScanStepsLabel}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                <ItemsControl ItemsSource="{Binding StepMessages}" Margin="0,18,0,0">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border CornerRadius="12" Background="{DynamicResource SoftPanelBrush}" Padding="12" Margin="0,0,0,10">
+                                                <TextBlock Text="{Binding}" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

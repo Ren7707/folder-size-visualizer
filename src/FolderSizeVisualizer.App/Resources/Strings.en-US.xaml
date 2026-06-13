@@ -1,0 +1,32 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="AppName">Space Lens</sys:String>
+    <sys:String x:Key="MenuLabel">Menu</sys:String>
+    <sys:String x:Key="HomeLabel">Home</sys:String>
+    <sys:String x:Key="TreemapLabel">Treemap</sys:String>
+    <sys:String x:Key="SortLabel">Sort</sys:String>
+    <sys:String x:Key="SettingsLabel">Settings</sys:String>
+    <sys:String x:Key="WelcomeTitle">Welcome to Space Lens.</sys:String>
+    <sys:String x:Key="WelcomeSubtitle">Paste or choose a folder, then read storage usage as geometry.</sys:String>
+    <sys:String x:Key="CurrentFolderLabel">Current folder</sys:String>
+    <sys:String x:Key="AnalyzeFolderLabel">Analyze folder</sys:String>
+    <sys:String x:Key="AnalyzeLabel">Analyze</sys:String>
+    <sys:String x:Key="BrowseLabel">Browse</sys:String>
+    <sys:String x:Key="CopyPathLabel">Copy path</sys:String>
+    <sys:String x:Key="FolderGeometryLabel">Folder geometry</sys:String>
+    <sys:String x:Key="ScanStepsLabel">Scan steps</sys:String>
+    <sys:String x:Key="LanguageLabel">Language</sys:String>
+    <sys:String x:Key="ThemeLabel">Theme</sys:String>
+    <sys:String x:Key="DeleteModeLabel">Delete mode</sys:String>
+    <sys:String x:Key="TreemapOpacityLabel">Treemap opacity</sys:String>
+    <sys:String x:Key="BackgroundBlurLabel">Background blur</sys:String>
+    <sys:String x:Key="ChooseBackgroundLabel">Choose background</sys:String>
+    <sys:String x:Key="SpaceControlLabel">Space Control</sys:String>
+    <sys:String x:Key="HelpText">Right-click blocks to expand, go back, open location, or delete safely.</sys:String>
+    <sys:String x:Key="OpenLocationLabel">Open location</sys:String>
+    <sys:String x:Key="ExpandLabel">Expand</sys:String>
+    <sys:String x:Key="BackLabel">Back to parent</sys:String>
+    <sys:String x:Key="DeleteLabel">Delete</sys:String>
+    <sys:String x:Key="PathPlaceholderLabel">Paste folder path or browse</sys:String>
+</ResourceDictionary>

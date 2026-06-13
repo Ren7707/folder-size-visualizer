@@ -1,0 +1,32 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="AppName">Space Lens</sys:String>
+    <sys:String x:Key="MenuLabel">菜单</sys:String>
+    <sys:String x:Key="HomeLabel">主页</sys:String>
+    <sys:String x:Key="TreemapLabel">空间图</sys:String>
+    <sys:String x:Key="SortLabel">排序</sys:String>
+    <sys:String x:Key="SettingsLabel">设置</sys:String>
+    <sys:String x:Key="WelcomeTitle">欢迎使用 Space Lens。</sys:String>
+    <sys:String x:Key="WelcomeSubtitle">粘贴或选择文件夹，用几何面积快速看清空间占用。</sys:String>
+    <sys:String x:Key="CurrentFolderLabel">当前文件夹</sys:String>
+    <sys:String x:Key="AnalyzeFolderLabel">分析文件夹</sys:String>
+    <sys:String x:Key="AnalyzeLabel">分析</sys:String>
+    <sys:String x:Key="BrowseLabel">选择</sys:String>
+    <sys:String x:Key="CopyPathLabel">复制路径</sys:String>
+    <sys:String x:Key="FolderGeometryLabel">文件夹几何图</sys:String>
+    <sys:String x:Key="ScanStepsLabel">扫描步骤</sys:String>
+    <sys:String x:Key="LanguageLabel">语言</sys:String>
+    <sys:String x:Key="ThemeLabel">主题</sys:String>
+    <sys:String x:Key="DeleteModeLabel">删除方式</sys:String>
+    <sys:String x:Key="TreemapOpacityLabel">图形透明度</sys:String>
+    <sys:String x:Key="BackgroundBlurLabel">背景模糊</sys:String>
+    <sys:String x:Key="ChooseBackgroundLabel">选择背景图</sys:String>
+    <sys:String x:Key="SpaceControlLabel">空间控制</sys:String>
+    <sys:String x:Key="HelpText">右键图形块可展开、返回、打开位置或安全删除。</sys:String>
+    <sys:String x:Key="OpenLocationLabel">打开位置</sys:String>
+    <sys:String x:Key="ExpandLabel">展开</sys:String>
+    <sys:String x:Key="BackLabel">返回上一层</sys:String>
+    <sys:String x:Key="DeleteLabel">删除</sys:String>
+    <sys:String x:Key="PathPlaceholderLabel">粘贴文件夹路径或点击选择</sys:String>
+</ResourceDictionary>
