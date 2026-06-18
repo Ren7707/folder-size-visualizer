@@ -127,6 +127,17 @@ public sealed class TreemapView : FrameworkElement
 
     protected override void OnMouseWheel(MouseWheelEventArgs e)
     {
+        ApplyWheelZoom(e);
+    }
+
+    protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
+    {
+        ApplyWheelZoom(e);
+    }
+
+    private void ApplyWheelZoom(MouseWheelEventArgs e)
+    {
+        if (e.Handled) return;
         _zoomOrigin = e.GetPosition(this);
         _zoom = CoerceZoom(e.Delta > 0 ? _zoom * ZoomStep : _zoom / ZoomStep);
         e.Handled = true;
