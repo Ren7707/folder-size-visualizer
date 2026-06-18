@@ -12,9 +12,9 @@ namespace FolderSizeVisualizer.App.Controls;
 
 public sealed class TreemapView : FrameworkElement
 {
-    private const double MinZoom = 1.0;
-    private const double MaxZoom = 6.0;
-    private const double ZoomStep = 1.12;
+    private const double MinZoomX = 1.0;
+    private const double MaxZoomX = 12.0;
+    private const double ZoomStep = 1.18;
 
     public static readonly DependencyProperty ItemsSourceProperty =
         DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable), typeof(TreemapView),
@@ -34,8 +34,8 @@ public sealed class TreemapView : FrameworkElement
 
     private readonly List<TreemapRectangle> _hitRegions = new();
     private FileNode? _hoveredNode;
-    private double _zoom = MinZoom;
-    private Point _zoomOrigin;
+    private double _zoomX = MinZoomX;
+    private double _zoomOriginX;
 
     public IEnumerable? ItemsSource
     {
@@ -77,7 +77,7 @@ public sealed class TreemapView : FrameworkElement
         view.ResetZoom();
     }
 
-    public static double CoerceZoom(double value) => Math.Clamp(value, MinZoom, MaxZoom);
+    public static double CoerceZoom(double value) => Math.Clamp(value, MinZoomX, MaxZoomX);
 
     private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => ResetZoom();
 
@@ -90,7 +90,7 @@ public sealed class TreemapView : FrameworkElement
         _hitRegions.AddRange(rects);
 
         drawingContext.PushClip(new RectangleGeometry(new Rect(0, 0, ActualWidth, ActualHeight)));
-        drawingContext.PushTransform(new ScaleTransform(_zoom, _zoom, _zoomOrigin.X, _zoomOrigin.Y));
+        drawingContext.PushTransform(new ScaleTransform(_zoomX, 1, _zoomOriginX, 0));
 
         for (var i = 0; i < rects.Count; i++)
         {
@@ -99,17 +99,23 @@ public sealed class TreemapView : FrameworkElement
             var brush = new SolidColorBrush(PickColor(rect.Node, i));
             drawingContext.DrawRoundedRectangle(brush, null, bounds, 6, 6);
 
-            if (bounds.Width > 96 && bounds.Height > 36)
+            if (bounds.Width > 96 && bounds.Height > 28)
             {
-                var label = $"{rect.Node.Name}\n{FormatBytes(rect.Node.SizeBytes)}";
+                var label = bounds.Width > 172 && bounds.Height > 42
+                    ? $"{rect.Node.Name}\n{FormatBytes(rect.Node.SizeBytes)}"
+                    : rect.Node.Name;
                 var text = new FormattedText(label, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
                     new Typeface("Segoe UI"), 12, Brushes.White, VisualTreeHelper.GetDpi(this).PixelsPerDip)
                 {
-                    MaxTextWidth = bounds.Width - 14,
-                    MaxTextHeight = bounds.Height - 10,
+                    MaxTextWidth = Math.Max(0, bounds.Width - 14),
+                    MaxTextHeight = Math.Max(0, bounds.Height - 10),
+                    TextAlignment = TextAlignment.Center,
                     Trimming = TextTrimming.CharacterEllipsis
                 };
-                drawingContext.DrawText(text, new Point(bounds.X + 8, bounds.Y + 6));
+                var textPoint = new Point(
+                    bounds.X + Math.Max(0, (bounds.Width - text.Width) / 2),
+                    bounds.Y + Math.Max(0, (bounds.Height - text.Height) / 2));
+                drawingContext.DrawText(text, textPoint);
             }
         }
 
@@ -138,8 +144,8 @@ public sealed class TreemapView : FrameworkElement
     private void ApplyWheelZoom(MouseWheelEventArgs e)
     {
         if (e.Handled) return;
-        _zoomOrigin = e.GetPosition(this);
-        _zoom = CoerceZoom(e.Delta > 0 ? _zoom * ZoomStep : _zoom / ZoomStep);
+        _zoomOriginX = e.GetPosition(this).X;
+        _zoomX = CoerceZoom(e.Delta > 0 ? _zoomX * ZoomStep : _zoomX / ZoomStep);
         e.Handled = true;
         InvalidateVisual();
     }
@@ -174,8 +180,7 @@ public sealed class TreemapView : FrameworkElement
         => Application.Current.TryFindResource(key) as string ?? fallback;
 
     private Point ToContentPoint(Point point)
-        => new(_zoomOrigin.X + (point.X - _zoomOrigin.X) / _zoom,
-            _zoomOrigin.Y + (point.Y - _zoomOrigin.Y) / _zoom);
+        => new(_zoomOriginX + (point.X - _zoomOriginX) / _zoomX, point.Y);
 
     private void UpdateHoveredNode(Point viewPoint)
     {
@@ -187,8 +192,8 @@ public sealed class TreemapView : FrameworkElement
 
     private void ResetZoom()
     {
-        _zoom = MinZoom;
-        _zoomOrigin = new Point(0, 0);
+        _zoomX = MinZoomX;
+        _zoomOriginX = 0;
         InvalidateVisual();
     }
 
