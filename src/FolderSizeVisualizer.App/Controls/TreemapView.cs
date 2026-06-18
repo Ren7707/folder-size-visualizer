@@ -12,6 +12,10 @@ namespace FolderSizeVisualizer.App.Controls;
 
 public sealed class TreemapView : FrameworkElement
 {
+    private const double MinZoom = 1.0;
+    private const double MaxZoom = 6.0;
+    private const double ZoomStep = 1.12;
+
     public static readonly DependencyProperty ItemsSourceProperty =
         DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable), typeof(TreemapView),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, OnItemsSourceChanged));
@@ -30,6 +34,8 @@ public sealed class TreemapView : FrameworkElement
 
     private readonly List<TreemapRectangle> _hitRegions = new();
     private FileNode? _hoveredNode;
+    private double _zoom = MinZoom;
+    private Point _zoomOrigin;
 
     public IEnumerable? ItemsSource
     {
@@ -63,13 +69,17 @@ public sealed class TreemapView : FrameworkElement
 
     private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        var view = (TreemapView)d;
         if (e.OldValue is INotifyCollectionChanged oldCollection)
-            oldCollection.CollectionChanged -= ((TreemapView)d).OnCollectionChanged;
+            oldCollection.CollectionChanged -= view.OnCollectionChanged;
         if (e.NewValue is INotifyCollectionChanged newCollection)
-            newCollection.CollectionChanged += ((TreemapView)d).OnCollectionChanged;
+            newCollection.CollectionChanged += view.OnCollectionChanged;
+        view.ResetZoom();
     }
 
-    private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => InvalidateVisual();
+    public static double CoerceZoom(double value) => Math.Clamp(value, MinZoom, MaxZoom);
+
+    private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => ResetZoom();
 
     protected override void OnRender(DrawingContext drawingContext)
     {
@@ -78,6 +88,9 @@ public sealed class TreemapView : FrameworkElement
         var nodes = ItemsSource?.OfType<FileNode>().ToList() ?? new List<FileNode>();
         var rects = TreemapLayoutService.Layout(nodes, 0, 0, ActualWidth, ActualHeight);
         _hitRegions.AddRange(rects);
+
+        drawingContext.PushClip(new RectangleGeometry(new Rect(0, 0, ActualWidth, ActualHeight)));
+        drawingContext.PushTransform(new ScaleTransform(_zoom, _zoom, _zoomOrigin.X, _zoomOrigin.Y));
 
         for (var i = 0; i < rects.Count; i++)
         {
@@ -99,21 +112,30 @@ public sealed class TreemapView : FrameworkElement
                 drawingContext.DrawText(text, new Point(bounds.X + 8, bounds.Y + 6));
             }
         }
+
+        drawingContext.Pop();
+        drawingContext.Pop();
     }
 
     protected override void OnMouseMove(MouseEventArgs e)
     {
-        var point = e.GetPosition(this);
-        _hoveredNode = _hitRegions.FirstOrDefault(r =>
-            point.X >= r.X && point.X <= r.X + r.Width &&
-            point.Y >= r.Y && point.Y <= r.Y + r.Height)?.Node;
+        UpdateHoveredNode(e.GetPosition(this));
         ToolTip = _hoveredNode is null
             ? null
             : $"{_hoveredNode.Name}\n{FormatBytes(_hoveredNode.SizeBytes)}\n{_hoveredNode.Kind}\n{_hoveredNode.FullPath}";
     }
 
+    protected override void OnMouseWheel(MouseWheelEventArgs e)
+    {
+        _zoomOrigin = e.GetPosition(this);
+        _zoom = CoerceZoom(e.Delta > 0 ? _zoom * ZoomStep : _zoom / ZoomStep);
+        e.Handled = true;
+        InvalidateVisual();
+    }
+
     protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
     {
+        UpdateHoveredNode(e.GetPosition(this));
         if (_hoveredNode is null) return;
 
         var menu = new ContextMenu();
@@ -126,6 +148,7 @@ public sealed class TreemapView : FrameworkElement
 
     protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
     {
+        UpdateHoveredNode(e.GetPosition(this));
         if (_hoveredNode?.Kind == FileNodeKind.Directory && ExpandCommand?.CanExecute(_hoveredNode) == true)
             ExpandCommand.Execute(_hoveredNode);
     }
@@ -138,6 +161,25 @@ public sealed class TreemapView : FrameworkElement
 
     private static string Text(string key, string fallback)
         => Application.Current.TryFindResource(key) as string ?? fallback;
+
+    private Point ToContentPoint(Point point)
+        => new(_zoomOrigin.X + (point.X - _zoomOrigin.X) / _zoom,
+            _zoomOrigin.Y + (point.Y - _zoomOrigin.Y) / _zoom);
+
+    private void UpdateHoveredNode(Point viewPoint)
+    {
+        var point = ToContentPoint(viewPoint);
+        _hoveredNode = _hitRegions.FirstOrDefault(r =>
+            point.X >= r.X && point.X <= r.X + r.Width &&
+            point.Y >= r.Y && point.Y <= r.Y + r.Height)?.Node;
+    }
+
+    private void ResetZoom()
+    {
+        _zoom = MinZoom;
+        _zoomOrigin = new Point(0, 0);
+        InvalidateVisual();
+    }
 
     private static Color PickColor(FileNode node, int index)
     {
